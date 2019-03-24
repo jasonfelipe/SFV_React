@@ -1,0 +1,57 @@
+
+h1 {
+    text-align: center;
+}
+
+
+#combo-view{
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 25px;
+    margin-bottom: 30px;
+}
+
+#cbutton-section {
+    border-right: 1px solid #e9ecef48;
+}
+
+.modal-header {
+    margin: 0 auto;
+}
+
+table {
+    margin-bottom: 30px !important;
+    border: 1px solid black;
+    margin: 0 auto;
+}
+
+#topRow {
+    font-weight: 600;
+    background-color: aquamarine;
+}
+
+tr {
+    border-bottom: 1px solid black;
+
+}
+
+td {
+    border-right: 1px solid black;
+    padding: 10px;
+}
+
+#frameDataCol {
+    white-space: pre-wrap;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#move-img {
+    margin-top: 25px;
+}
+
+
