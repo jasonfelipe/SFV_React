@@ -10,7 +10,7 @@ class Main extends Component {
         this.state = {
             jumbotronTitle: "",
             data: [],
-            modalView: false,
+            modal: false,
         }
 
     }
@@ -23,6 +23,12 @@ class Main extends Component {
                 data: res.data
             });
         });
+    }
+
+    showInfoModal = () =>{
+        this.setState({
+            modal: true
+        })
     }
 
 
