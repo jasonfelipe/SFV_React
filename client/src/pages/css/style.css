@@ -54,4 +54,10 @@ td {
     margin-top: 25px;
 }
 
+#unsafe{
+    background-color: red;
+}
 
+#negative {
+    background-color: rgb(238, 134, 134)
+}

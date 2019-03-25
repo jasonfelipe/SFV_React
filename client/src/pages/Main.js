@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import API from '../utils/API';
+import { FDRow, FDTable } from "../components/FrameDataTable";
 import './css/style.css'
 
 class Main extends Component {
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context)
         this.getCharacterData = this.getCharacterData.bind(this);
         this.state = {
@@ -13,23 +14,66 @@ class Main extends Component {
         }
 
     }
+
+
     getCharacterData = event => {
         event.preventDefault();
         API.getFrameData(event.target.innerHTML).then(res => {
-            console.log(res.data);
+            this.setState({
+                data: res.data
+            });
         });
     }
 
 
-    render(){
+    render() {
+
+
         return (
-            <div className='jumbotron'>
-                        <h1>Main Menu</h1>
-                        <h2 className='center'>Character Select</h2>
-                        <button id='ryu' onClick={this.getCharacterData} className='btn btn-primary'>Ryu</button>
+            <div>
+                <div className='jumbotron'>
+                    <h1>Main Menu</h1>
+                    <h2 className='center'>Character Select</h2>
+                    <button id='ryu' onClick={this.getCharacterData} className='btn btn-primary'>Ryu</button>
+                </div>
+
+                {this.state.data.length > 0 ?
+                    <div className='container'>
+                        <FDTable>
+                            {this.state.data.map(data =>
+                                <FDRow
+                                    key={data.move}
+                                    move={data.move}
+                                    startup={data.startup}
+                                    active={data.active}
+                                    recovery={data.recovery}
+                                    onHit={data.onHit}
+                                    onBlock={data.onBlock}
+                                    damage={data.damage}
+                                    stun={data.stun}
+                                    moveType={data.moveType}
+                                    attackType={data.attackType}
+                                    cancels={data.cancels}
+                                />
+                            )}
+                        </FDTable>
+                    </div>
+                    :
+                    <h1>
+                        Choose your character
+                    </h1>
+
+                }
+
+
             </div>
+
+
+
+
         )
     }
 }
 
 export default Main;
+

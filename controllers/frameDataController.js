@@ -10,5 +10,8 @@ module.exports = {
         db[character].findAll({}).then(dbModel => {
             res.send(dbModel)
         }).catch(err => res.status(422).json(err));
+    },
+    test: function (req, res){
+        console.log('test complete lol')
     }
 }
