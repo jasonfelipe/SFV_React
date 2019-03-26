@@ -11,9 +11,9 @@ class Main extends Component {
             jumbotronTitle: "",
             data: [],
             modal: false,
-        }
+        };
 
-    }
+    };
 
 
     getCharacterData = event => {
@@ -23,18 +23,16 @@ class Main extends Component {
                 data: res.data
             });
         });
-    }
+    };
 
     showInfoModal = () =>{
         this.setState({
             modal: true
-        })
-    }
+        });
+    };
 
 
     render() {
-
-
         return (
             <div>
                 <div className='jumbotron'>
@@ -68,18 +66,11 @@ class Main extends Component {
                     <h1>
                         Choose your character
                     </h1>
-
                 }
-
-
             </div>
-
-
-
-
-        )
-    }
-}
+        );
+    };
+};
 
 export default Main;
 
