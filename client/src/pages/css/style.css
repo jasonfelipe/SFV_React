@@ -39,6 +39,11 @@ td {
     padding: 10px;
 }
 
+.move:hover {
+    background-color: rgb(235, 235, 235);
+    cursor: pointer;
+}
+
 #frameDataCol {
     white-space: pre-wrap;
 }

@@ -17,18 +17,18 @@ export const FDRow = (props) => {
     }
 
     return (
-        <tr>
-            <td>{props.move}</td>
-            <td>{props.startup ? props.startup : "Null"}</td>
-            <td>{props.active ? props.active : "Null"}</td>
-            <td>{props.recovery ? props.recovery : "Null"}</td>
-            <td id={hitColor}>{props.onHit ? props.onHit : "Null"}</td>
-            <td id={blockColor}>{props.onBlock ? props.onBlock : "Null"}</td>
-            <td>{props.damage ? props.damage : "Null"}</td>
-            <td>{props.stun ? props.stun : "Null"}</td>
-            <td>{props.moveType ? props.moveType : "Null"}</td>
-            <td>{props.attackType ? props.attackType : "Null"}</td>
-            <td>{props.cancels ? props.cancels : "Null"}</td>
+        <tr onClick={props.getMoveInfo} className='move' id={props.move}>
+            <td class={props.move}>{props.move}</td>
+            <td class={props.move}>{props.startup ? props.startup : "Null"}</td>
+            <td class={props.move}>{props.active ? props.active : "Null"}</td>
+            <td class={props.move}>{props.recovery ? props.recovery : "Null"}</td>
+            <td id={hitColor} class={props.move}>{props.onHit ? props.onHit : "Null"}</td>
+            <td id={blockColor} class={props.move}>{props.onBlock ? props.onBlock : "Null"}</td>
+            <td class={props.move}>{props.damage ? props.damage : "Null"}</td>
+            <td class={props.move}>{props.stun ? props.stun : "Null"}</td>
+            <td class={props.move}>{props.moveType ? props.moveType : "Null"}</td>
+            <td class={props.move}>{props.attackType ? props.attackType : "Null"}</td>
+            <td class={props.move}>{props.cancels ? props.cancels : "Null"}</td>
         </tr>
     )
 }
