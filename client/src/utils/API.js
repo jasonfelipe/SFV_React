@@ -4,7 +4,7 @@ export default {
 
   // Get Ryu's Data
   getFrameData: character => {
-      console.log("Testing");
+    console.log("Heading to " + character + "...")
       return axios.get('/api/framedata/' + character )
   },
 

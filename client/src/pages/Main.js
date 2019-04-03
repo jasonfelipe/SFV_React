@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import API from '../utils/API';
 import { FDRow, FDTable } from "../components/FrameDataTable";
-import { Modal } from "../components/Modal";
+import { FrameDataModal } from "../components/Modals";
+
+import { Jumbotron } from "../components/Jumbotron"
 import './css/style.css'
 
 class Main extends Component {
@@ -12,61 +14,62 @@ class Main extends Component {
         this.state = {
             jumbotronTitle: "",
             data: [],
-            modal: false,
-            modalInfo:{}
+            frameDataModal: false,
+            frameDataInfo: {}
         };
-
     };
-
 
 
     getCharacterData = event => {
         event.preventDefault();
-        API.getFrameData(event.target.innerHTML).then(res => {
+        let character = event.target.innerHTML
+        API.getFrameData(character).then(res => {
             this.setState({
-                data: res.data
+                data: res.data,
+                jumbotronTitle: character
             });
         });
     };
 
-    showModalHandler = () => {
+    showFrameDataModal = () => {
+
         this.setState({
-            modal: true
+            frameDataModal: true,
         });
     };
 
-    closeModalHandler = () => {
+    closeFrameDataModal = () => {
         this.setState({
-            modal: false
+            frameDataModal: false,
         })
     }
 
-    getMoveInfo = event =>{
+
+    getMoveInfo = event => {
         event.preventDefault();
         let clicked = event.target.className;
-        console.log(clicked);
         this.state.data.forEach(element => {
-            if(clicked === element.move){
-                console.log(element)    
+            if (clicked === element.move) {
                 this.setState({
-                    modalInfo: element
+                    frameDataInfo: element
                 });
-                
             }
         });
-        
-        this.showModalHandler();
+        this.showFrameDataModal();
     }
+
 
     render() {
         return (
-            <div>
-                {this.state.modal ? <div onClick={this.closeModalHandler} className="back-drop"></div> : null}
-                <div className='jumbotron'>
-                    <h1>Main Menu</h1>
-                    <h2 className='center'>Character Select</h2>
+            <div className='wrapper'>
+                {this.state.frameDataModal ? <div onClick={this.closeFrameDataModal} className="back-drop"></div> : null}
+                <Jumbotron
+
+                    title={this.state.jumbotronTitle ? this.state.jumbotronTitle + " Frame Data" : "Character Select"}>
+
                     <button id='ryu' onClick={this.getCharacterData} className='btn btn-primary'>Ryu</button>
-                </div>
+                </Jumbotron>
+                    <button onClick={this.createCombo}>Create a combo</button>
 
                 {this.state.data.length > 0 ?
                     <div className='container'>
@@ -77,15 +80,15 @@ class Main extends Component {
                                     key={data.move}
                                     move={data.move}
                                     startup={data.startup}
-                                    active={data.active}
-                                    recovery={data.recovery}
-                                    onHit={data.onHit}
-                                    onBlock={data.onBlock}
-                                    damage={data.damage}
-                                    stun={data.stun}
-                                    moveType={data.moveType}
-                                    attackType={data.attackType}
-                                    cancels={data.cancels}
+                                    active={data.active === null ? "~" : data.active}
+                                    recovery={data.recovery === null ? "~" : data.recovery}
+                                    onHit={data.onHit === null ? "~" : data.onHit}
+                                    onBlock={data.onBlock === null ? "~" : data.onBlock}
+                                    damage={data.damage === null ? "~" : data.damage}
+                                    stun={data.stun === null ? "~" : data.stun}
+                                    moveType={data.moveType === null ? "~" : data.moveType}
+                                    attackType={data.attackType === null ? "~" : data.attackType}
+                                    cancels={data.cancels === null ? "~" : data.cancels}
                                 />
                             )}
                         </FDTable>
@@ -97,23 +100,25 @@ class Main extends Component {
                 }
 
 
-                    <Modal
-                        className='modal'
-                        show={this.state.modal}
-                        close={this.closeModalHandler}
-                        title={this.state.modalInfo.move || "Checking"}
-                        move={this.state.modalInfo.move || "Move Name"}
-                        info={["Startup: " + this.state.modalInfo.startup, "Active: " + this.state.modalInfo.active, 
-                            "Recovery: " + this.state.modalInfo.recovery, "Damage: " + this.state.modalInfo.damage,
-                            "Stun: " + this.state.modalInfo.stun, "Frames on hit: " + this.state.modalInfo.onHit, 
-                            "Frames on Block: " + this.state.modalInfo.onBlock, "Move Type: " + this.state.modalInfo.moveType, 
-                            "Attack Type: " + this.state.modalInfo.attackType, 
-                            ]}
-                        notes={this.state.modalInfo.notes ? this.state.modalInfo.notes.split('.') : null}                        
-                        src={this.state.modalInfo.gif || null}
-    
-                    />                
-                    
+                <FrameDataModal
+                    className='modal'
+                    show={this.state.frameDataModal}
+                    close={this.closeFrameDataModal}
+                    title={this.state.frameDataInfo.move || "Checking"}
+                    move={this.state.frameDataInfo.move || "Move Name"}
+                    info={["Startup: " + this.state.frameDataInfo.startup, "Active: " + this.state.frameDataInfo.active,
+                    "Recovery: " + this.state.frameDataInfo.recovery, "Damage: " + this.state.frameDataInfo.damage,
+                    "Stun: " + this.state.frameDataInfo.stun, "Frames on hit: " + this.state.frameDataInfo.onHit,
+                    "Frames on Block: " + this.state.frameDataInfo.onBlock, "Move Type: " + this.state.frameDataInfo.moveType,
+                    "Attack Type: " + this.state.frameDataInfo.attackType,
+                    ]}
+                    notes={this.state.frameDataInfo.notes ? this.state.frameDataInfo.notes.split('.') : null}
+                    src={this.state.frameDataInfo.gif || null}
+
+                />
+
+
+
             </div>
         );
     };

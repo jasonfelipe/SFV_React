@@ -5,15 +5,13 @@ import "./Modal.css";
 
 //Container Component should have these props:
 // this.state.show and their appropriate functions.
-// this.state.body (in this case we made it have different props for this)
+
 // this.state.close function to close the modal.
 
-
-export const Modal = props => {
-
-
-
-
+//props.combo is the total combo,
+//props.availableMoves is the moves that are good to combo.
+//props.image is each move's image.
+export const ComboModal = props => {
     return (
         <div className='modal-wrapper'
             style={{
@@ -21,36 +19,35 @@ export const Modal = props => {
                 opacity: props.show ? '1' : '0'
             }}>
             <div className="modal-content">
+
                 <div className='modal-header'>
-                    <h4 className='modal-title centered'>
-                        {props.title}
+                    <h4 className='modal-title center'>
+                        COMBO CREATOR
                     </h4>
                 </div>
 
                 <div className='modal-body'>
-                    {props.body}
                     <div className="row">
-                        <img className='centered' alt={props.move} src={props.src} />
+                        <div>
+                            YOUR COMBO
+                    <h5>{props.combo}</h5>
+                        </div>
                     </div>
                     <div className='row'>
-                        <div className={props.notes ? 'col-sm-6 col-border' : "col-sm-12"}>
-                            <h3 className='center'>Information</h3>
+                        <div className={props.availableMoves ? 'col-sm-6 col-border' : "col-sm-12"}>
+                            <h3 className='center'>Available Moves</h3>
                             <ul>
-                                {props.info.map((element, index) =>
+                                {props.availableMoves.map((element, index) =>
                                     <li key={index}>
                                         {element}
                                     </li>
                                 )}
                             </ul>
                         </div>
-                        {props.notes === null ?
-                            <div></div> :
-                            <div className='col-sm-6'>
-                                <h3 className='center'>Other Notes</h3>
-                                {props.notes}
-
-                            </div>
-                        }
+                        <div className='col-sm-6'>
+                            <h3 className='center'>Move Images</h3>
+                            <img className='centered' alt={props.move} src={props.src} />
+                        </div>
                     </div>
                 </div>
                 <div className='modal-footer'>

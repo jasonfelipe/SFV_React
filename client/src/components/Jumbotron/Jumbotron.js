@@ -1,9 +1,11 @@
 import React from "react";
+import "./Jumbotron.css";
 
-export const Jumbotron = ({ children }) => {
+export const Jumbotron = props => {
     return (
         <div className='jumbotron'>
-            {children}
+            <h1>{props.title}</h1>
+            {props.children}
         </div>
     )
 }
