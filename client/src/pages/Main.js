@@ -43,7 +43,19 @@ class Main extends Component {
 
     getMoveInfo = event =>{
         event.preventDefault();
+        let clicked = event.target.className;
+        console.log(clicked);
+        this.state.data.forEach(element => {
+            if(clicked === element.move){
+                console.log(element)    
+                this.setState({
+                    modalInfo: element
+                });
+                
+            }
+        });
         
+        this.showModalHandler();
     }
 
     render() {
@@ -55,9 +67,6 @@ class Main extends Component {
                     <h2 className='center'>Character Select</h2>
                     <button id='ryu' onClick={this.getCharacterData} className='btn btn-primary'>Ryu</button>
                 </div>
-
-                <button className="open-modal-btn" onClick={this.showModalHandler}>Open Modal</button>
-
 
                 {this.state.data.length > 0 ?
                     <div className='container'>
@@ -87,14 +96,24 @@ class Main extends Component {
                     </h1>
                 }
 
-                <Modal
-                    className='modal'
-                    title={"Title lol"}
-                    content={"This is content!"}
-                    show={this.state.modal}
-                    close={this.closeModalHandler}
-                />
 
+                    <Modal
+                        className='modal'
+                        show={this.state.modal}
+                        close={this.closeModalHandler}
+                        title={this.state.modalInfo.move || "Checking"}
+                        move={this.state.modalInfo.move || "Move Name"}
+                        info={["Startup: " + this.state.modalInfo.startup, "Active: " + this.state.modalInfo.active, 
+                            "Recovery: " + this.state.modalInfo.recovery, "Damage: " + this.state.modalInfo.damage,
+                            "Stun: " + this.state.modalInfo.stun, "Frames on hit: " + this.state.modalInfo.onHit, 
+                            "Frames on Block: " + this.state.modalInfo.onBlock, "Move Type: " + this.state.modalInfo.moveType, 
+                            "Attack Type: " + this.state.modalInfo.attackType, 
+                            ]}
+                        notes={this.state.modalInfo.notes ? this.state.modalInfo.notes.split('.') : null}                        
+                        src={this.state.modalInfo.gif || null}
+    
+                    />                
+                    
             </div>
         );
     };

@@ -5,11 +5,22 @@
     
     position:fixed;
     width: 60%;
-    top: 40%;
+    top:5%;
     left:20%;
     transition: all .8s;
 }
 
+.col-border {
+    border-right: 1px solid gray;
+    padding-right:10px;
+}
+
+img {
+    display: block;        
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom:10px;
+}
 
 .back-drop {
     background-color: rgba(48, 49, 48, 0.42);
