@@ -58,6 +58,10 @@ class Main extends Component {
         this.showFrameDataModal();
     }
 
+    goToCombos = () => {
+        window.location = '/combo'
+    }
+
 
     render() {
         return (
@@ -69,7 +73,7 @@ class Main extends Component {
 
                     <button id='ryu' onClick={this.getCharacterData} className='btn btn-primary'>Ryu</button>
                 </Jumbotron>
-                    <button onClick={this.createCombo}>Create a combo</button>
+                    <button onClick={this.goToCombos}>Create a combo</button>
 
                 {this.state.data.length > 0 ?
                     <div className='container'>
