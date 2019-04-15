@@ -10,7 +10,8 @@ export default {
 
   //route for getting normal moves to create a combo
   getComboData: character => {
-    return axios.get('/api/combos/' + character + "")
+    console.log("Finding Combos from " + character + "...")
+    return axios.get('/api/combos/' + character)
   },
 
   postCombo: (character, combo) => {
