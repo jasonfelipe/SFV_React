@@ -1,4 +1,4 @@
 module.exports = {
-  Combos: require("./Combos"),
+  Combos: require("./combos"),
   Ryu: require('./ryu')
 };
