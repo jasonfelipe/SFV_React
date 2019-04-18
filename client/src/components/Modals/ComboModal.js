@@ -29,8 +29,10 @@ export const ComboModal = props => {
                 <div className='modal-body'>
                     <div className="row">
                         <div>
-                            YOUR COMBO
-                    <h5>{props.combo}</h5>
+                            <h3 className='center'>
+                                YOUR COMBO
+                            </h3>
+                            <h5 className='center'>{props.combo}</h5>
                         </div>
                     </div>
                     <div className='row'>
@@ -39,7 +41,7 @@ export const ComboModal = props => {
                             <ul>
                                 {props.availableMoves.map((element, index) =>
                                     <li key={index}>
-                                        {element}
+                                        <button>{element.move}</button>
                                     </li>
                                 )}
                             </ul>

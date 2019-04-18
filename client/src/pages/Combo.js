@@ -12,6 +12,7 @@ class Ryu extends Component {
             jumbotronTitle: "",
             frameData: [],
             comboData: [],
+            modalData: [],
             comboModal: false,
             showMenu: false,
             dropdownName: "Characters"
@@ -52,13 +53,31 @@ class Ryu extends Component {
 
     getCharacterData = event => {
         event.preventDefault();
+        console.log("TEST")
         let character = event.target.innerHTML
         API.getFrameData(character).then(res => {
+            let comboStarters = [];
+            res.data.map(move => {
+                if (move.onHit >= 3){
+                    comboStarters.push(move);
+                    }
+                });
+
+
+
+
             this.setState({
                 frameData: res.data,
                 jumbotronTitle: character,
-                dropdownName: character
+                dropdownName: character,
+                modalData: comboStarters,
+                comboModal: true
             });
+
+
+            
+            // console.log(this.state.modalData);
+
         });
     };
 
@@ -82,7 +101,7 @@ class Ryu extends Component {
             >
                 <DropdownItem 
                     name='Ryu'
-                    onClick={this.getCharacterData}
+                    getData={this.getCharacterData}
                 />
             </DropdownMenu>
             
@@ -94,7 +113,7 @@ class Ryu extends Component {
                     className='modal'
                     show={this.state.comboModal}
                     close={this.closeComboModal}
-                    availableMoves={["LOL"]}
+                    availableMoves={this.state.modalData}
                 />
         </div>
         )

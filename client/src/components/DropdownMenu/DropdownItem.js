@@ -1,6 +1,6 @@
 import React from "react";
 export const DropdownItem = props => {
     return (
-        <button onClick={props.onClick}>{props.name}</button>
+        <button onClick={props.getData}>{props.name}</button>
     )
 }
