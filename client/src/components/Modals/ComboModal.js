@@ -28,11 +28,35 @@ export const ComboModal = props => {
 
                 <div className='modal-body'>
                     <div className="row">
-                        <div>
+                        <div className='col-sm-6'>
                             <h3 className='center'>
                                 YOUR COMBO
                             </h3>
-                            <h5 className='center'>{props.combo}</h5>
+
+                            <ul className='centered'>    
+                                {props.combo.map((moves, index) =>
+                                    <li key={moves.move + index}>
+                                        {moves.move}
+                                    </li>
+                                )}
+                            </ul>
+                        </div>
+                        <div className='col-sm-6'>
+                            <div className='row'>
+                                <h4 className='center'>
+                                    Combo Data
+                                </h4>
+                            </div>
+                            <div className='row'>
+                                <h5>
+                                    Damage: {props.dmg}
+                                </h5>
+                            </div>
+                            <div className='row'>
+                                <h5>
+                                    Number of Hits: {props.hits}
+                                </h5>
+                            </div>
                         </div>
                     </div>
                     <div className='row'>
@@ -41,14 +65,14 @@ export const ComboModal = props => {
                             <ul>
                                 {props.availableMoves.map((element, index) =>
                                     <li key={index}>
-                                        <button>{element.move}</button>
+                                        <button onClick={props.moveSelector}>{element.move}</button>
                                     </li>
                                 )}
                             </ul>
                         </div>
                         <div className='col-sm-6'>
                             <h3 className='center'>Move Images</h3>
-                            <img className='centered' alt={props.move} src={props.src} />
+                            <img className='centered img-fluid' alt={props.move} src={props.src} />
                         </div>
                     </div>
                 </div>

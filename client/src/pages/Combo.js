@@ -13,6 +13,7 @@ class Ryu extends Component {
             frameData: [],
             comboData: [],
             modalData: [],
+            selectedData: "",
             comboModal: false,
             showMenu: false,
             dropdownName: "Characters"
@@ -51,19 +52,29 @@ class Ryu extends Component {
         this.showComboModal();
     }
 
+    resetData = () => {
+        this.setState({
+            frameData: [],
+            comboData: [],
+            modalData: [],
+            selectedData: "",
+        });
+    }
+
     getCharacterData = event => {
+        this.resetData();
         event.preventDefault();
         console.log("TEST")
         let character = event.target.innerHTML
         API.getFrameData(character).then(res => {
             let comboStarters = [];
-            res.data.map(move => {
+            res.data.forEach(move => {
                 if (move.onHit >= 3){
                     comboStarters.push(move);
                     }
                 });
 
-
+            console.log("Your Data:", res.data)
 
 
             this.setState({
@@ -74,14 +85,55 @@ class Ryu extends Component {
                 comboModal: true
             });
 
-
-            
             // console.log(this.state.modalData);
 
         });
     };
 
+    moveSelector = event => {
+        event.preventDefault();
+        let selected = event.target.innerHTML;
+        let comboArray = this.state.comboData;
+        let moveButtons = []
+        this.state.frameData.forEach(moves => {
+            if (moves.move === selected){
 
+                comboArray.push(moves);
+
+
+                this.setState({
+                    selectedData: moves,
+                    comboData:comboArray
+                });
+             return selected = moves
+            }
+
+            let splitting = moves.startup.split('');
+
+            console.log("Let me loop:", splitting);
+
+
+            if (parseInt(selected.onHit) >= parseInt(moves.startup) && moves.moveType !== 'throw' &&
+            moves.moveType !== 'aerial' && moves.moveType !== 'unique') {
+                console.log(selected.onHit);
+                
+
+                moveButtons.push(moves)
+                this.setState({
+                    modalData: moveButtons
+                });
+
+            }else {
+                this.setState({
+                    modalData: []
+                })
+            }
+            
+        });
+        
+
+
+    }
     
 
     render(){
@@ -114,7 +166,11 @@ class Ryu extends Component {
                     show={this.state.comboModal}
                     close={this.closeComboModal}
                     availableMoves={this.state.modalData}
-                />
+                    moveSelector={this.moveSelector}
+                    move={this.state.selectedData.move}
+                    src={this.state.selectedData.gif}
+                    combo={this.state.comboData}
+            />
         </div>
         )
     }

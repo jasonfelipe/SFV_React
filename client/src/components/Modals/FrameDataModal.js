@@ -26,7 +26,7 @@ export const FrameDataModal = props => {
 
                 <div className='modal-body'>
                     <div className="row">
-                        <img className='centered' alt={props.move} src={props.src} />
+                        <img className='centered img-fluid' alt={props.move} src={props.src} />
                     </div>
                     <div className='row'>
                         <div className={props.notes ? 'col-sm-6 col-border' : "col-sm-12"}>
