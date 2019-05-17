@@ -14,6 +14,8 @@ class Ryu extends Component {
             comboData: [],
             modalData: [],
             selectedData: "",
+            dmg: [],
+            hits: [],
             comboModal: false,
             showMenu: false,
             dropdownName: "Characters"
@@ -94,46 +96,62 @@ class Ryu extends Component {
         event.preventDefault();
         let selected = event.target.innerHTML;
         let comboArray = this.state.comboData;
-        let moveButtons = []
-        this.state.frameData.forEach(moves => {
+        let comboDamage = this.state.dmg;
+        let comboHits = 0;
+
+        this.state.frameData.forEach(moves => {            
             if (moves.move === selected){
-
                 comboArray.push(moves);
-
-
+                console.log("Whats in the state BEFORE", this.state.dmg);
+                comboDamage.push(moves.damage);
                 this.setState({
-                    selectedData: moves,
-                    comboData:comboArray
+                    selectedData: moves,    
+                    comboData:comboArray,
+                    dmg:comboDamage
+                }, function(){
+                    console.log("Whats in the state AFTER", this.state.dmg);
+
+                    console.log('complete');
                 });
-             return selected = moves
+                
+                
+                return selected = moves
             }
 
-            let splitting = moves.startup.split('');
-
-            console.log("Let me loop:", splitting);
-
-
-            if (parseInt(selected.onHit) >= parseInt(moves.startup) && moves.moveType !== 'throw' &&
-            moves.moveType !== 'aerial' && moves.moveType !== 'unique') {
-                console.log(selected.onHit);
-                
-
-                moveButtons.push(moves)
+            this.handleComboButtons(selected);
+        });
+    }
+    
+    
+    handleComboButtons = (selected) =>{
+        let moveButtons = []
+        this.state.frameData.forEach(move => {
+            if(parseInt(selected.onHit) >= parseInt(move.startup) && move.moveType !== 'throw' &&
+            move.moveType !== 'aerial normal' && move.moveType !== 'vskill') {
+                // console.log("Going into movesButtons", move);
+                moveButtons.push(move)
                 this.setState({
                     modalData: moveButtons
                 });
-
             }else {
-                this.setState({
-                    modalData: []
-                })
+                if (selected.moveType === 'normal' && selected.cancels.split(' ').includes('sp')){
+                    moveButtons = [];
+                    this.state.frameData.forEach(move => {
+                        if (move.moveType === 'special'){
+                            moveButtons.push(move)
+                            this.setState({
+                                modalData: moveButtons
+                            });
+                        }
+                    });
+                }else{
+                    this.setState({
+                        modalData: []
+                    })
+                }
             }
-            
-        });
+        })}   
         
-
-
-    }
     
 
     render(){
@@ -170,6 +188,8 @@ class Ryu extends Component {
                     move={this.state.selectedData.move}
                     src={this.state.selectedData.gif}
                     combo={this.state.comboData}
+                    dmg={this.state.dmg.reduce((a,b) => a + b, 0)}
+                    hits={this.state.hits}
             />
         </div>
         )

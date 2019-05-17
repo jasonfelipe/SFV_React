@@ -44,7 +44,6 @@ export const FrameDataModal = props => {
                             <div className='col-sm-6'>
                                 <h5 className='center'>Other Notes</h5>
                                 {props.notes}
-
                             </div>
                         }
                     </div>

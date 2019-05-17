@@ -27,6 +27,7 @@ export const ComboModal = props => {
                 </div>
 
                 <div className='modal-body'>
+                    {props.combo.length > 0 ? 
                     <div className="row">
                         <div className='col-sm-6'>
                             <h3 className='center'>
@@ -41,34 +42,53 @@ export const ComboModal = props => {
                                 )}
                             </ul>
                         </div>
+
                         <div className='col-sm-6'>
-                            <div className='row'>
-                                <h4 className='center'>
-                                    Combo Data
-                                </h4>
-                            </div>
-                            <div className='row'>
-                                <h5>
-                                    Damage: {props.dmg}
-                                </h5>
-                            </div>
-                            <div className='row'>
-                                <h5>
-                                    Number of Hits: {props.hits}
-                                </h5>
+                                <div className='row'>
+                                
+                                    <h4 className='center'>
+                                        Combo Data
+                                    </h4>
+                                </div>
+
+                                <div className='row'>
+                                    <h5>
+                                        Damage: {props.dmg}
+                                    </h5>
+                                </div>
+
+                                <div className='row'>
+                                    <h5>
+                                        Number of Hits: {props.hits}
+                                    </h5>
+                                </div>     
                             </div>
                         </div>
+                        : 
+                    <div className='row'> 
+                        <h3 className='center'>No Data Selected</h3>
                     </div>
+                }
                     <div className='row'>
                         <div className={props.availableMoves ? 'col-sm-6 col-border' : "col-sm-12"}>
-                            <h3 className='center'>Available Moves</h3>
+                        {props.availableMoves.length > 0 ? 
+                            <div>
+                            <h3 className='center'>Available Moves</h3> 
                             <ul>
-                                {props.availableMoves.map((element, index) =>
-                                    <li key={index}>
-                                        <button onClick={props.moveSelector}>{element.move}</button>
-                                    </li>
-                                )}
+                                
+                                    {props.availableMoves.map((element, index) =>
+                                        <li key={index}>
+                                            <button onClick={props.moveSelector}>{element.move}</button>
+                                        </li>
+                                    )}
+                                
                             </ul>
+                            </div> :
+
+                                <h3 className='center'>No Moves Available</h3>
+                        }    
+                            
+                                
                         </div>
                         <div className='col-sm-6'>
                             <h3 className='center'>Move Images</h3>
