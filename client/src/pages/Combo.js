@@ -4,6 +4,7 @@ import { Jumbotron } from "../components/Jumbotron";
 import { DropdownMenu, DropdownItem } from "../components/DropdownMenu";
 import API from '../utils/API';
 import './css/style.css';
+import images from '../utils/images.json';
 
 class Ryu extends Component {
     constructor(props, context) {
@@ -18,7 +19,8 @@ class Ryu extends Component {
             hits: [],
             comboModal: false,
             showMenu: false,
-            dropdownName: "Characters"
+            chosenCharacter: "Characters",
+            image: ""
         };
         this.showDropdown =this.showDropdown.bind(this);
         this.closeDropdown = this.closeDropdown.bind(this);
@@ -66,8 +68,16 @@ class Ryu extends Component {
     getCharacterData = event => {
         this.resetData();
         event.preventDefault();
-        console.log("TEST")
         let character = event.target.innerHTML
+        let characterImage;
+
+        images.forEach(characters => {
+            if (character === characters.name){
+             return characterImage = characters.image       
+            }
+        });
+
+
         API.getFrameData(character).then(res => {
             let comboStarters = [];
             res.data.forEach(move => {
@@ -82,9 +92,10 @@ class Ryu extends Component {
             this.setState({
                 frameData: res.data,
                 jumbotronTitle: character,
-                dropdownName: character,
+                chosenCharacter: character,
                 modalData: comboStarters,
-                comboModal: true
+                comboModal: true,
+                image: characterImage
             });
 
             // console.log(this.state.modalData);
@@ -162,10 +173,10 @@ class Ryu extends Component {
                 title={this.state.jumbotronTitle ? this.state.jumbotronTitle + " Frame Data" : "Character Select"}
             >
 
-
+            <img className='jumbotron-image' alt={this.state.chosenCharacter} src={this.state.image}/>
 
             <DropdownMenu 
-                name={this.state.dropdownName}
+                name={this.state.chosenCharacter}
                 show={this.state.showMenu}
                 showDropdown={this.showDropdown}
             >

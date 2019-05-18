@@ -1,4 +1,9 @@
 .jumbotron {
     background-color: gold !important;
-    color: white;
+    color: whitesmoke;
+}
+
+.jumbotron-image{
+    max-width: 20%;
+    max-height: 20%;   
 }
