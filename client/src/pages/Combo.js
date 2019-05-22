@@ -6,6 +6,13 @@ import API from '../utils/API';
 import './css/style.css';
 import images from '../utils/images.json';
 
+// Stuff to do ~
+// Particulars about distancing in combos (hit blowback);
+// Can a move be done more than twice in a combo? Three times?; 
+// Should true hits be implemented?;
+// How does juggles work? (EX Tatsu -> Shoryu, Tatsu -> EX Shoryu, etc);
+// Implement V Trigger cancels combos (May needa DB update);
+
 class Ryu extends Component {
     constructor(props, context) {
         super(props, context)
@@ -209,7 +216,7 @@ class Ryu extends Component {
     }
 
     submitCombo = () => {
-        console.log("Send it in baby!")
+        console.log("Send it in baby!");
     }
 
     render() {
