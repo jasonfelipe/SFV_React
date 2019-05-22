@@ -15,8 +15,8 @@ class Ryu extends Component {
             comboData: [],
             modalData: [],
             selectedData: "",
-            dmg: [],
-            hits: [],
+            dmg: 0,
+            hits: 0,
             comboModal: false,
             showMenu: false,
             chosenCharacter: "Characters",
@@ -28,6 +28,7 @@ class Ryu extends Component {
     };
 
     showComboModal = () => {
+        this.resetData();
         this.setState({
             comboModal: true
         })
@@ -53,6 +54,7 @@ class Ryu extends Component {
     }
 
     createCombo = () => {
+        this.resetData();
         this.showComboModal();
     }
 
@@ -62,22 +64,37 @@ class Ryu extends Component {
             comboData: [],
             modalData: [],
             selectedData: "",
+            dmg: 0,
+            hits: 0,
+        });
+        API.getFrameData(this.state.chosenCharacter).then(res => {
+            let comboStarters = [];
+            res.data.forEach(move => {
+                if (move.onHit >= 3){
+                    comboStarters.push(move);
+                    }
+                });
+            this.setState({
+                frameData: res.data,
+                modalData: comboStarters,
+            });
         });
     }
 
     getCharacterData = event => {
-        this.resetData();
-        event.preventDefault();
-        let character = event.target.innerHTML
-        let characterImage;
 
+        event.preventDefault();
+        console.log(this.state)
+        let character = this.state.chosenCharacter;
+        if (this.state.chosenCharacter === "Characters"){
+             character = event.target.innerHTML;
+        }
+        let characterImage;
         images.forEach(characters => {
             if (character === characters.name){
              return characterImage = characters.image       
             }
         });
-
-
         API.getFrameData(character).then(res => {
             let comboStarters = [];
             res.data.forEach(move => {
@@ -94,7 +111,6 @@ class Ryu extends Component {
                 jumbotronTitle: character,
                 chosenCharacter: character,
                 modalData: comboStarters,
-                comboModal: true,
                 image: characterImage
             });
 
@@ -103,32 +119,62 @@ class Ryu extends Component {
         });
     };
 
+
+    damageFormatter = (data) =>{
+        let nums = data.split(' ');
+        let hits = this.state.hits;
+        let total = this.state.dmg;
+        let moveDamage = 0;
+        console.log("The Nums: ", nums, "The total: ", total);
+
+        
+        if (hits > 2){
+            if(nums[2]){
+                moveDamage = moveDamage + parseInt(nums[2]) * .1;
+            }
+            moveDamage = moveDamage + parseInt(nums[0]) * .1;
+        } else {
+            if (nums[2]){
+                moveDamage = parseInt(nums[0]) + parseInt(nums[2]);
+            }
+            else{
+                moveDamage = parseInt(nums[0]);
+            }
+        }
+        
+        console.log("Checking Damage:", moveDamage);
+
+        if (nums[2] && typeof(parseInt(nums[2])) === 'number'){ 
+            total = parseInt(total) + moveDamage;
+            hits = hits + 2;
+            }
+        else {
+            console.log("Going to this one.");
+            total = parseInt(total) + parseInt(nums[0]);
+            hits++;
+        }
+        this.setState({
+            dmg: total,
+            hits: hits
+        })
+    }
+
     moveSelector = event => {
         event.preventDefault();
         let selected = event.target.innerHTML;
         let comboArray = this.state.comboData;
-        let comboDamage = this.state.dmg;
-        let comboHits = 0;
-
         this.state.frameData.forEach(moves => {            
             if (moves.move === selected){
                 comboArray.push(moves);
-                console.log("Whats in the state BEFORE", this.state.dmg);
-                comboDamage.push(moves.damage);
+                this.damageFormatter(moves.damage);
                 this.setState({
                     selectedData: moves,    
                     comboData:comboArray,
-                    dmg:comboDamage
                 }, function(){
-                    console.log("Whats in the state AFTER", this.state.dmg);
-
                     console.log('complete');
                 });
-                
-                
                 return selected = moves
             }
-
             this.handleComboButtons(selected);
         });
     }
@@ -187,11 +233,14 @@ class Ryu extends Component {
             </DropdownMenu>
             
             </Jumbotron>
+            {this.state.frameData.length ? 
 
             <button onClick={this.showComboModal} className='btn btn-primary'>Make a Combo</button>
             
+            : null}
+            
             <ComboModal
-                    className='modal'
+            className='modal'
                     show={this.state.comboModal}
                     close={this.closeComboModal}
                     availableMoves={this.state.modalData}
@@ -199,9 +248,9 @@ class Ryu extends Component {
                     move={this.state.selectedData.move}
                     src={this.state.selectedData.gif}
                     combo={this.state.comboData}
-                    dmg={this.state.dmg.reduce((a,b) => a + b, 0)}
+                    dmg={this.state.dmg}
                     hits={this.state.hits}
-            />
+                    />
         </div>
         )
     }
