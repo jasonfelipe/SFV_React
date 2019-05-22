@@ -97,7 +97,11 @@ export const ComboModal = props => {
                     </div>
                 </div>
                 <div className='modal-footer'>
-                    <button className="btn-cancel" onClick={props.close}>CLOSE</button>
+                    <button className="btn btn-danger" onClick={props.close}>CLOSE</button>
+                    {props.hits > 1 ? 
+                        <button className="btn btn-success" onClick={props.submit}>Submit</button>
+                        : null
+                    }
                 </div>
             </div>
         </div>

@@ -1,12 +1,10 @@
 .modal-wrapper {
     background: white;
-
     position:fixed;
     width: 55%;
     top:5px;
     left:25%;
     transition: all .8s;
-
     color: black;
 }
 
@@ -28,4 +26,8 @@ img {
     position: fixed;
     transition: all 1.3s;
     width: 100%;
+}
+
+.modal {
+    height: max-content;
 }

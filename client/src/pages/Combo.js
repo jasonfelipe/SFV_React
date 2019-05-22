@@ -31,13 +31,13 @@ class Ryu extends Component {
         this.resetData();
         this.setState({
             comboModal: true
-        })
+        });
     }
 
     closeComboModal = () => {
         this.setState({
             comboModal: false
-        })
+        });
     }
 
     showDropdown = event => {
@@ -93,7 +93,6 @@ class Ryu extends Component {
                 return characterImage = characters.image
             }
         });
-
         API.getFrameData(character).then(res => {
             let comboStarters = [];
             res.data.forEach(move => {
@@ -101,8 +100,7 @@ class Ryu extends Component {
                     comboStarters.push(move);
                 }
             });
-
-            console.log("Your Data:", res.data)
+            // console.log("Your Data:", res.data)
             this.setState({
                 frameData: res.data,
                 jumbotronTitle: character,
@@ -115,35 +113,36 @@ class Ryu extends Component {
 
 
     damageFormatter = (data) => {
+
+        //Database values split up.
         let nums = data.split(' ');
         let hits = this.state.hits;
         let total = this.state.dmg;
 
-        console.log("The Nums: ", nums, "The total: ", total);
+        // console.log("The Nums: ", nums, "The total: ", total);
 
-
+        //Damage reduction
         if (hits > 2) {
             if (nums[2] && typeof (parseInt(nums[2])) === 'number') {
-                total = total + (parseInt(nums[2]) * .9);
+                total = total + (parseInt(nums[2]) * (1 - (hits * .1)));
             }
-            total = total + (parseInt(nums[0]) * .9);
+            total = total + (parseInt(nums[0]) *  (1 - (hits * .1)));
         }
         else {
             if (nums[2] && typeof (parseInt(nums[2])) === 'number') {
                 total = total + parseInt(nums[2]);
+
+                //In reality we should have two variables, true hits, and scaling hits.
                 hits++
             }
             total = total + parseInt(nums[0]);
             hits++
         }
-
-        console.log("Checking Total:", total);
-
-
+        // console.log("Checking Total:", total);
         this.setState({
             dmg: total,
             hits: hits
-        })
+        });
     }
 
     moveSelector = event => {
@@ -158,7 +157,7 @@ class Ryu extends Component {
                 return selected = moves
             }
         }, console.log("complete loop"));
-        
+
         this.damageFormatter(selected.damage);
         this.setState({
             selectedData: selected,
@@ -176,28 +175,42 @@ class Ryu extends Component {
         //Creates an empty array for setting the state for later
         let moveButtons = []
 
+        //Goes through each move...
         this.state.frameData.forEach(move => {
+            //Checking certain key values...
             if (parseInt(selected.onHit) >= parseInt(move.startup) && move.moveType !== 'throw' &&
                 move.moveType !== 'aerial normal' && move.moveType !== 'vskill') {
                 console.log("Going into movesButtons: ", move.move);
-                moveButtons.push(move)
-            } else {
-                if (selected.moveType === 'normal' && selected.cancels.split(' ').includes('sp')) {
-                    this.state.frameData.forEach(move => {
-                        if (move.moveType === 'special') {
-                            moveButtons.push(move)
-                        }
-                    });
-                }
+                moveButtons.push(move);
             }
+
+            //If not met and other certain variables are met...
+            if (moveButtons.length === 0 && selected.moveType === 'normal' && selected.cancels.split(' ').includes('sp')) {
+                this.state.frameData.forEach(move => {
+                    if (move.moveType === 'special') {
+                        moveButtons.push(move)
+                    }
+                });
+            }
+
+            if (moveButtons.length === 0 && selected.moveType === 'special' && selected.cancels.split(' ').includes('su')) {
+                this.state.frameData.forEach(move => {
+                    if (move.moveType === 'super') {
+                        moveButtons.push(move)
+                    }
+                });
+            }
+
         });
-        console.log("What's turning into buttons: ", moveButtons);
+        //Setting the state per usual.
         this.setState({
             modalData: moveButtons
         });
     }
 
-
+    submitCombo = () => {
+        console.log("Send it in baby!")
+    }
 
     render() {
         return (
@@ -222,10 +235,10 @@ class Ryu extends Component {
 
                 </Jumbotron>
                 {this.state.frameData.length ?
-
                     <button onClick={this.showComboModal} className='btn btn-primary'>Make a Combo</button>
-
                     : null}
+
+
 
                 <ComboModal
                     className='modal'
@@ -238,6 +251,7 @@ class Ryu extends Component {
                     combo={this.state.comboData}
                     dmg={this.state.dmg}
                     hits={this.state.hits}
+                    submit={this.submitCombo}
                 />
             </div>
         )
