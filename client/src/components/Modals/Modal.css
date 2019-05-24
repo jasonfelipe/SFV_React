@@ -31,3 +31,7 @@ img {
 .modal {
     height: max-content;
 }
+
+.btn {
+    margin: 5px;
+}

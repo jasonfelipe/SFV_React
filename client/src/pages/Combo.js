@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { CRow, CTable} from "../components/Tables/CombosTable";
 import { ComboModal } from "../components/Modals";
 import { Jumbotron } from "../components/Jumbotron";
 import { DropdownMenu, DropdownItem } from "../components/DropdownMenu";
@@ -27,7 +28,9 @@ class Ryu extends Component {
             comboModal: false,
             showMenu: false,
             chosenCharacter: "Characters",
-            image: ""
+            image: "",
+            submitted: 0,
+            comboImage: null
         };
         this.showDropdown = this.showDropdown.bind(this);
         this.closeDropdown = this.closeDropdown.bind(this);
@@ -43,6 +46,7 @@ class Ryu extends Component {
 
     closeComboModal = () => {
         this.setState({
+            submitted: 0,
             comboModal: false
         });
     }
@@ -73,6 +77,7 @@ class Ryu extends Component {
             selectedData: "",
             dmg: 0,
             hits: 0,
+            comboImage: null
         });
         API.getFrameData(this.state.chosenCharacter).then(res => {
             let comboStarters = [];
@@ -116,6 +121,14 @@ class Ryu extends Component {
                 image: characterImage
             });
         });
+
+        API.getComboData(character).then(res => {
+            // console.log(res);
+            this.setState({
+                comboData: res.data
+            })
+
+        })
     };
 
 
@@ -200,7 +213,7 @@ class Ryu extends Component {
                 });
             }
 
-            if (moveButtons.length === 0 && selected.moveType === 'special' && selected.cancels.split(' ').includes('su')) {
+            if (moveButtons.length === 0 && selected.moveType === 'special') {
                 this.state.frameData.forEach(move => {
                     if (move.moveType === 'super') {
                         moveButtons.push(move)
@@ -217,6 +230,29 @@ class Ryu extends Component {
 
     submitCombo = () => {
         console.log("Send it in baby!");
+        let character = this.state.chosenCharacter;
+        let moves = []
+        this.state.comboData.forEach(move => 
+            moves.push(move.move)
+        );
+
+        let data = {
+            combo: moves.toString(),
+            character : character,
+            damage: this.state.dmg,
+            hits: this.state.hits,
+            image: this.state.comboImage
+        };
+
+        API.postCombo(character, data).then((res, err) =>  {
+            if (err) {
+                throw err;
+            }
+            console.log(res);
+            this.setState({
+                submitted: 1
+            });   
+        });
     }
 
     render() {
@@ -244,6 +280,29 @@ class Ryu extends Component {
                 {this.state.frameData.length ?
                     <button onClick={this.showComboModal} className='btn btn-primary'>Make a Combo</button>
                     : null}
+
+                
+                {this.state.comboData.length > 0 ?
+                    <div className='container'>
+                        <h2 className='center'>{this.state.chosenCharacter}'s Combos!</h2>
+                        <CTable>
+                            {this.state.comboData.map(data =>
+                                <CRow
+                                    key={data.id}
+                                    comboID={data.id}
+                                    combo={data.combo.replace(/,/g, ' -> ')}
+                                    dmg={data.damage}
+                                    hits={data.hits}
+                                />
+                            )}
+                        </CTable>
+                    </div>
+                    :
+                    <h1>
+                        Choose your character
+                    </h1>
+                }
+
 
 
 

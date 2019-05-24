@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import API from '../utils/API';
-import { FDRow, FDTable } from "../components/FrameDataTable";
+import { FDRow, FDTable } from "../components/Tables/FrameDataTable";
 import { FrameDataModal } from "../components/Modals";
 
 import { Jumbotron } from "../components/Jumbotron"
