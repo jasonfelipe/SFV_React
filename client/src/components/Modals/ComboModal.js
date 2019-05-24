@@ -78,7 +78,7 @@ export const ComboModal = props => {
                                 
                                     {props.availableMoves.map((element, index) =>
                                         <li key={index}>
-                                            <button onClick={props.moveSelector}>{element.move}</button>
+                                            <button className='btn btn-info' onClick={props.moveSelector}>{element.move}</button>
                                         </li>
                                     )}
                                 
@@ -98,7 +98,7 @@ export const ComboModal = props => {
                 </div>
                 <div className='modal-footer'>
                     
-                    {props.submitted ?
+                    {props.submitted > 0 ?
                     <div className='row'>  
                         <h3 id='modal-feedback' className='centered'>Data Submitted!</h3>
                     </div>

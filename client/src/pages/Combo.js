@@ -11,8 +11,10 @@ import images from '../utils/images.json';
 // Particulars about distancing in combos (hit blowback);
 // Can a move be done more than twice in a combo? Three times?; 
 // Should true hits be implemented?;
-// How does juggles work? (EX Tatsu -> Shoryu, Tatsu -> EX Shoryu, etc);
+// How do juggles work? (EX Tatsu -> Shoryu, Tatsu -> EX Shoryu, etc);
 // Implement V Trigger cancels combos (May needa DB update);
+
+
 
 class Ryu extends Component {
     constructor(props, context) {
@@ -20,6 +22,7 @@ class Ryu extends Component {
         this.state = {
             jumbotronTitle: "",
             frameData: [],
+            allCombos: [],
             comboData: [],
             modalData: [],
             selectedData: "",
@@ -95,6 +98,7 @@ class Ryu extends Component {
 
     getCharacterData = event => {
         event.preventDefault();
+        
         let character = this.state.chosenCharacter;
         if (this.state.chosenCharacter === "Characters") {
             character = event.target.innerHTML;
@@ -105,6 +109,7 @@ class Ryu extends Component {
                 return characterImage = characters.image
             }
         });
+        //Getting FrameData
         API.getFrameData(character).then(res => {
             let comboStarters = [];
             res.data.forEach(move => {
@@ -121,11 +126,11 @@ class Ryu extends Component {
                 image: characterImage
             });
         });
-
-        API.getComboData(character).then(res => {
-            // console.log(res);
+        //Getting Combos
+        API.getCombos(character).then(res => {
+            console.log(res);
             this.setState({
-                comboData: res.data
+                allCombos: res.data
             })
 
         })
@@ -145,18 +150,20 @@ class Ryu extends Component {
         if (hits > 2) {
             if (nums[2] && typeof (parseInt(nums[2])) === 'number') {
                 total = total + (parseInt(nums[2]) * (1 - (hits * .1)));
+                hits++;
             }
             total = total + (parseInt(nums[0]) *  (1 - (hits * .1)));
+            hits++;
         }
         else {
             if (nums[2] && typeof (parseInt(nums[2])) === 'number') {
                 total = total + parseInt(nums[2]);
 
                 //In reality we should have two variables, true hits, and scaling hits.
-                hits++
+                hits++;
             }
             total = total + parseInt(nums[0]);
-            hits++
+            hits++;
         }
         // console.log("Checking Total:", total);
         this.setState({
@@ -176,7 +183,7 @@ class Ryu extends Component {
                 //returns selected for buttons.
                 return selected = moves
             }
-        }, console.log("complete loop"));
+        });
 
         this.damageFormatter(selected.damage);
         this.setState({
@@ -212,7 +219,6 @@ class Ryu extends Component {
                     }
                 });
             }
-
             if (moveButtons.length === 0 && selected.moveType === 'special') {
                 this.state.frameData.forEach(move => {
                     if (move.moveType === 'super') {
@@ -253,6 +259,11 @@ class Ryu extends Component {
                 submitted: 1
             });   
         });
+        API.getCombos(character).then(res => {
+            this.setState({
+                allCombos: res.data
+            });
+        });
     }
 
     render() {
@@ -280,13 +291,12 @@ class Ryu extends Component {
                 {this.state.frameData.length ?
                     <button onClick={this.showComboModal} className='btn btn-primary'>Make a Combo</button>
                     : null}
-
-                
-                {this.state.comboData.length > 0 ?
+   
+                {this.state.allCombos.length > 0 ?
                     <div className='container'>
                         <h2 className='center'>{this.state.chosenCharacter}'s Combos!</h2>
                         <CTable>
-                            {this.state.comboData.map(data =>
+                            {this.state.allCombos.map(data =>
                                 <CRow
                                     key={data.id}
                                     comboID={data.id}
@@ -299,13 +309,9 @@ class Ryu extends Component {
                     </div>
                     :
                     <h1>
-                        Choose your character
+                        Choose your character.  
                     </h1>
                 }
-
-
-
-
                 <ComboModal
                     className='modal'
                     show={this.state.comboModal}
@@ -318,6 +324,7 @@ class Ryu extends Component {
                     dmg={this.state.dmg}
                     hits={this.state.hits}
                     submit={this.submitCombo}
+                    submitted={this.state.submitted}
                 />
             </div>
         )
